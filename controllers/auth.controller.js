@@ -54,3 +54,25 @@ module.exports.signUp = async (req, res) => {
    
 
   }
+
+   module.exports.login2 = async (req, res) => { 
+    try {
+      User.findOne({email:req.body.email},(err,user)=>{
+        if(err) res.json(err)
+        if(!user) res.json("check your logins");
+        else {
+          if(bcrypt.compareSync(req.body.password,user.password)){
+            var token = jwt.sign({user},'secret',{expiresIn:3600})
+            res.json(token)
+          }else{
+            res.json("incorrect password")
+          }
+        }
+      })
+    }
+    catch {
+      res.json("error")
+    }
+   
+
+  }
